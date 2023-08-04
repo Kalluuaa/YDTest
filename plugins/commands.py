@@ -9,7 +9,7 @@ from pyrogram.types import *
 from database.ia_filterdb import Media, get_file_details, unpack_new_file_id, get_bad_files
 from database.users_chats_db import db
 from info import CHANNELS, ADMINS, AUTH_CHANNEL, LOG_CHANNEL, PICS, VRFIED_IMG, VRFY_IMG, BATCH_FILE_CAPTION, CUSTOM_FILE_CAPTION, PROTECT_CONTENT, CHNL_LNK, GRP_LNK, REQST_CHANNEL, SUPPORT_CHAT_ID, SUPPORT_CHAT, MAX_B_TN, VERIFY, SHORTLINK_API, SHORTLINK_URL, TUTORIAL, IS_TUTORIAL, HOW_TO_VERIFY, PREMIUM_USER
-from utils import get_settings, get_size, is_subscribed, save_group_settings, temp, verify_user, check_token, check_verification, get_token, get_shortlink, get_tutorial
+from utils import get_settings, direct_gen_handler, get_size, is_subscribed, save_group_settings, temp, verify_user, check_token, check_verification, get_token, get_shortlink, get_tutorial
 from database.connections_mdb import active_connection
 # from plugins.pm_filter import ENABLE_SHORTLINK
 import re, asyncio, os, sys
@@ -147,7 +147,7 @@ async def start(client, message):
             if f_caption is None:
                 f_caption = f"{title}"
             try:
-                await client.send_cached_media(
+                reply_file = await client.send_cached_media(
                     chat_id=message.from_user.id,
                     file_id=msg.get("file_id"),
                     caption=f_caption,
@@ -163,10 +163,13 @@ async def start(client, message):
                         ]
                     )
                 )
+                markup = await direct_gen_handler(file_reply)
+                await file_reply.edit_reply_markup(markup) if markup else None
+    
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 logger.warning(f"Floodwait of {e.x} sec.")
-                await client.send_cached_media(
+                reply_file = await client.send_cached_media(
                     chat_id=message.from_user.id,
                     file_id=msg.get("file_id"),
                     caption=f_caption,
@@ -182,6 +185,9 @@ async def start(client, message):
                         ]
                     )
                 )
+                markup = await direct_gen_handler(file_reply)
+                await file_reply.edit_reply_markup(markup) if markup else None
+
             except Exception as e:
                 logger.warning(e, exc_info=True)
                 continue
@@ -326,7 +332,7 @@ async def start(client, message):
                     reply_markup=InlineKeyboardMarkup(btn)
                 )
                 return
-            msg = await client.send_cached_media(
+            reply_file = await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file_id,
                 caption=f_caption,
@@ -342,6 +348,9 @@ async def start(client, message):
                     ]
                 )
             )
+            markup = await direct_gen_handler(file_reply)
+            await file_reply.edit_reply_markup(markup) if markup else None
+    
         #     filesarr.append(msg)
         # k = await client.send_message(chat_id = message.from_user.id, text=f"<b><u>❗️❗️❗️IMPORTANT❗️️❗️❗️</u></b>\n\nThis Movie Files/Videos will be deleted in <b><u>10 mins</u> 🫥 <i></b>(Due to Copyright Issues)</i>.\n\n<b><i>Please forward this ALL Files/Videos to your Saved Messages and Start Download there</i></b>")
         # await asyncio.sleep(600)
@@ -391,7 +400,7 @@ async def start(client, message):
                     reply_markup=InlineKeyboardMarkup(btn)
                 )
                 return
-            msg = await client.send_cached_media(
+            reply_file = await client.send_cached_media(
                 chat_id=message.from_user.id,
                 file_id=file_id,
                 protect_content=True if pre == 'filep' else False,
@@ -406,8 +415,11 @@ async def start(client, message):
                     ]
                 )
             )
+            markup = await direct_gen_handler(file_reply)
+            await file_reply.edit_reply_markup(markup) if markup else None
+    
             filetype = msg.media
-            file = getattr(msg, filetype.value)
+            file = getattr(reply_file, filetype.value)
             title = '@YDZone ' + ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@'), file.file_name.split()))
             size=get_size(file.file_size)
             f_caption = f"<code>{title}</code>"
@@ -452,7 +464,7 @@ async def start(client, message):
             reply_markup=InlineKeyboardMarkup(btn)
         )
         return
-    msg = await client.send_cached_media(
+    reply_file = await client.send_cached_media(
         chat_id=message.from_user.id,
         file_id=file_id,
         caption=f_caption,
@@ -468,6 +480,9 @@ async def start(client, message):
             ]
         )
     )
+    markup = await direct_gen_handler(file_reply)
+    await file_reply.edit_reply_markup(markup) if markup else None
+    
     # btn = [[
     #     InlineKeyboardButton("Get File Again", callback_data=f'delfile#{file_id}')
     # ]]
