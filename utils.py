@@ -639,14 +639,13 @@ async def direct_gen_handler(m: Message):
     try:
         log_msg = await m.copy(chat_id=DIRECT_GEN_DB)
         stream_link, download_link = await gen_link(log_msg)
-        mxlink = f"intent:#Intent;package=com.mxtech.videoplayer.ad;S.url={download_link};end"
         if stream_link and download_link:
             if not m.reply_markup:
                 markup = InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton("🎥 Stream 🎥", url=stream_link),
-                        InlineKeyboardButton("📥 Download 📥", url=mxlink)
+                        InlineKeyboardButton("📥 Download 📥", url=download_link)
                     ]
                 ]
             )
@@ -656,7 +655,7 @@ async def direct_gen_handler(m: Message):
                     0,
                     [
                         InlineKeyboardButton("🎥 Stream 🎥", url=stream_link),
-                        InlineKeyboardButton("📥 Download 📥", url=mxlink)
+                        InlineKeyboardButton("📥 Download 📥", url=download_link)
                     ]
                 )
                 markup = InlineKeyboardMarkup(markup)
