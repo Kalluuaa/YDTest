@@ -646,10 +646,7 @@ async def direct_gen_handler(m: Message):
                 [
                     [
                         InlineKeyboardButton("🎥 Stream 🎥", url=stream_link),
-                        InlineKeyboardButton("📥 Download 📥", url=download_link)
-                    ],
-                    [
-                        InlineKeyboardButton("MX", url=mxlink)
+                        InlineKeyboardButton("📥 Download 📥", url=mxlink)
                     ]
                 ]
             )
@@ -659,11 +656,7 @@ async def direct_gen_handler(m: Message):
                     0,
                     [
                         InlineKeyboardButton("🎥 Stream 🎥", url=stream_link),
-                        InlineKeyboardButton("📥 Download 📥", url=download_link)
-                    ],
-                    [
-                    
-                        InlineKeyboardButton("MX", url=mxlink)
+                        InlineKeyboardButton("📥 Download 📥", url=mxlink)
                     ]
                 )
                 markup = InlineKeyboardMarkup(markup)
