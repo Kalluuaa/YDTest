@@ -644,7 +644,8 @@ async def direct_gen_handler(m: Message):
                 markup = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("🎥 Stream/Fast Download ⚡", url=stream_link)
+                        InlineKeyboardButton("🎥 Stream 🎥", url=stream_link),
+                        InlineKeyboardButton("📥 Download 📥", url=download_link),
                     ]
                 ]
             )
@@ -653,7 +654,8 @@ async def direct_gen_handler(m: Message):
                 markup.insert(
                     0,
                     [
-                        InlineKeyboardButton("🎥 Stream/Fast Download ⚡", url=stream_link)
+                        InlineKeyboardButton("🎥 Stream 🎥", url=stream_link),
+                        InlineKeyboardButton("📥 Download 📥", url=download_link),
                     ]
                 )
                 markup = InlineKeyboardMarkup(markup)
